@@ -1,12 +1,14 @@
 package com.example.countdown
 
 import android.content.Context
+import android.content.Intent
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.glance.GlanceId
 import androidx.glance.GlanceModifier
+import androidx.glance.action.Action
 import androidx.glance.action.clickable
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
@@ -26,18 +28,19 @@ import androidx.glance.unit.ColorProvider
 class CountdownWidget : GlanceAppWidget() {
     override suspend fun provideGlance(context: Context, id: GlanceId) {
         val ev = Store.nearest(context)
-        provideContent { Content(ev) }
+        val open = actionStartActivity(Intent(context, MainActivity::class.java))
+        provideContent { Content(ev, open) }
     }
 
     @Composable
-    private fun Content(ev: Ev?) {
+    private fun Content(ev: Ev?, open: Action) {
         val white = ColorProvider(Color.White)
         Column(
             modifier = GlanceModifier
                 .fillMaxSize()
                 .background(ColorProvider(Color(0xFF1E88E5)))
                 .padding(12.dp)
-                .clickable(actionStartActivity<MainActivity>()),
+                .clickable(open),
             verticalAlignment = Alignment.CenterVertically,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
